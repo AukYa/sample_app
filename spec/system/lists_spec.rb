@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-descirbe '投稿のテスト' do
-  let!(:list) { create(:list, title: "hoge", body: "body") }
-  
+describe '投稿のテスト' do
+  let!(:list) { create(:list, title: "hoge", body: "body", image: fixture_file_upload("spec/fixtures/sample-author1.jpg")) }
+
   describe 'トップ画面(top_path)のテスト' do
     before do
       visit top_path
@@ -16,7 +16,7 @@ descirbe '投稿のテスト' do
       end
     end
   end
-  
+
   describe '投稿画面のテスト'do
    before do
      visit new_list_path
@@ -26,19 +26,19 @@ descirbe '投稿のテスト' do
         expect(current_path).to eq('/lists/new')
      end
      it '投稿ボタンが表示されているか' do
-       expect(page).to have_button 'create'
+       expect(page).to have_button '投稿'
      end
    end
    context '投稿処理のテスト' do
      it '投稿後のリダイレクト先は正しいか' do
-       fill_in 'List[title]', with: Faker::Lorem.characters(number:10)
-       fill_in 'List[body]', with: Faker::Lorem.characters(number:30)
-       click_button 'create'
+       fill_in 'list[title]', with: Faker::Lorem.characters(number:10)
+       fill_in 'list[body]', with: Faker::Lorem.characters(number:30)
+       click_button '投稿'
        expect(page).to have_current_path list_path(list)
      end
    end
   end
-  
+
   describe '一覧画面のテスト' do
     before do
       visit lists_path
@@ -50,7 +50,7 @@ descirbe '投稿のテスト' do
       end
     end
   end
-  
+
   describe '詳細画面のテスト' do
     before do
       visit list_path(list)
@@ -82,7 +82,7 @@ descirbe '投稿のテスト' do
       end
     end
   end
-  
+
   describe '編集画面のテスト' do
     before do
       visit edit_list_path(list)
@@ -93,14 +93,14 @@ descirbe '投稿のテスト' do
         expect(page).to have_field 'list[body]', with: list.body
       end
       it '保存ボタンが表示される' do
-        expect(page).to have_button 'update'
+        expect(page).to have_button '保存'
       end
     end
     context '更新処理に関するテスト' do
       it '更新後のリダイレクト先は正しいか' do
         fill_in 'List[title]', with: Faker::Lorem.characters(number:10)
         fill_in 'List[body]', with: Faker::Lorem.characters(number:30)
-        click_button 'update'
+        click_button '保存'
         expect(page).to have_current_path list_path(list)
       end
     end
